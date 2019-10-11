@@ -1,8 +1,8 @@
 import {field} from "./models/field.js";
 
 export class Minesweeper {
-
     /**
+     * @param {[]} array
      * @param {number} rows
      * @param {number} columns
      * @param {number | null} bombs
@@ -16,7 +16,19 @@ export class Minesweeper {
         if (bombs == null)
             this.bombs = this._calculateDefaultBombs();
         else
-            this.bombs = bombs;
+            this.bombs = bombs;   
+
+        this.array = [];
+
+        
+        for (let a = 0; a < rows; a++) {
+            let row = [];
+            for (let b = 0; b < columns; b++) {
+                row.push(field.hidden);
+            }
+            this.array.push(row);
+        }
+
     }
 
     /**
@@ -25,9 +37,10 @@ export class Minesweeper {
      * The calculation should Depend on the size of the field.
      * @private
      * @return {number} amount of bombs
-     */
+     */ 
     _calculateDefaultBombs() {
-        return 10;
+        let d = (row * column) / 10;
+        return d;
     }
 
     /**
@@ -39,7 +52,8 @@ export class Minesweeper {
      * @return {field}
      */
     getField(x, y) {
-        return field.hidden;
+        
+    return this.array[x][y];
     }
 
     /**
@@ -61,7 +75,11 @@ export class Minesweeper {
      * @return {boolean}
      */
     isBombOnPosition(x, y) {
-        return true;
+        for (let a = 0; a < rows; a++) {
+            for (let b = 0; b < columns; b++) {
+                
+            }
+        }
     }
 
     /**
@@ -72,6 +90,7 @@ export class Minesweeper {
      * @param {number} y
      */
     reveal(x, y) {
+        this.array[y][x] = field.visible;
 
     }
 
@@ -82,6 +101,17 @@ export class Minesweeper {
      * @param {number} y
      */
     toggleFieldState(x, y) {
+        if (this.array[y][x] == field.hidden)
+            this.array[y][x] = field.flag;
+
+        else if(this.array[y][x] == field.flag) 
+            this.array[y][x] = field.question_mark;
+
+        else if (this.array[y][x] == field.question_mark)
+            this.array[y][x] = field.hidden;
+
+        else
+            this.array[y][x] = field.visible;
     }
 
     /**
@@ -107,7 +137,22 @@ export class Minesweeper {
      * @return {number}
      */
     getRemainingBombCount() {
-        return -1;
+        //let flagedFields = 0;
+        //for (let a = 0; a < rows; a++) {
+            //for (let b = 0; b < columns; b++) {
+                //if (this.array[y][x] == field.flag)
+                    //flagedFields++;
+            //}
+        //}
+        //return ((rows*columns) / 10) - flagedFields;
+    }
+
+    /**
+    * Creates bombs
+    */
+    createBomb(bombs) {
+        let bombCountDefault = rows * columns / 10;
+    
     }
 
 }
