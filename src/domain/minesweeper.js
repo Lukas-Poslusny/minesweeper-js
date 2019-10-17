@@ -18,9 +18,8 @@ export class Minesweeper {
         else
             this.bombs = bombs;   
 
-        this.array = [];
 
-        
+        this.array = [];
         for (let a = 0; a < rows; a++) {
             let row = [];
             for (let b = 0; b < columns; b++) {
@@ -29,6 +28,15 @@ export class Minesweeper {
             this.array.push(row);
         }
 
+
+        this.bombField = [];
+        for (let a = 0; a < rows; a++) {
+            let row = [];
+            for (let b = 0; b < columns; b++) {
+                row.push(false);
+            }
+            this.bombField.push(row);
+        }
     }
 
     /**
@@ -38,9 +46,9 @@ export class Minesweeper {
      * @private
      * @return {number} amount of bombs
      */ 
-    _calculateDefaultBombs() {
-        let d = (row * column) / 10;
-        return d;
+    _calculateDefaultBombs(defaultBombs) {
+        defaultBombs = (row * column) / 10;
+        return defaultBombs;
     }
 
     /**
@@ -90,8 +98,17 @@ export class Minesweeper {
      * @param {number} y
      */
     reveal(x, y) {
-        this.array[y][x] = field.visible;
+        if(this.array[y][x] == field.hidden)
+            this.array[y][x] = field.visible;
 
+        if (this.array[y][x] == field.flag)
+            this.array[y][x] = field.flag;
+
+        else if (this.array[y][x] == field.question_mark)
+            this.array[y][x] = field.question_mark;
+
+        if (this.bombField[y][x] == this.array[y][x])
+            this.didLoose = true;
     }
 
     /**
@@ -128,31 +145,44 @@ export class Minesweeper {
      * Returns if the user clicked a bomb and therefore lost.
      * @returns {boolean}
      */
-    didLoose() {
+    didLoose(y, x) {
+        
+        document.write("you lost");
         return false;
+        
     }
 
     /**
      * Returns the remaining amount bombs, user has to select
      * @return {number}
      */
-    getRemainingBombCount() {
-        //let flagedFields = 0;
-        //for (let a = 0; a < rows; a++) {
-            //for (let b = 0; b < columns; b++) {
-                //if (this.array[y][x] == field.flag)
-                    //flagedFields++;
-            //}
-        //}
-        //return ((rows*columns) / 10) - flagedFields;
+    getRemainingBombCount(bombRemaining) {
+        bombRemaining = 10;
+        
+        //if (this.array[y][x] = )
+        
+        return bombRemaining;
+        
     }
 
     /**
     * Creates bombs
     */
-    createBomb(bombs) {
-        let bombCountDefault = rows * columns / 10;
-    
+    createBomb(bombRow, bombColumn) {
+        for (let a = 0; a < 10; a++) {
+            bombRow = Math.floor((Math.random() * 10));
+            bombColumn = Math.floor((Math.random() * 10));
+            bombFields[bombColumn][bombRow] = true;
+        }
+
     }
 
 }
+
+/*class Coordinates {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+    }
+}
+*/
