@@ -92,7 +92,7 @@ export class MinesweeperGUI {
                         </div>
                     `;
                 case field.flag:
-                    return '<div class="hidden">🏴</div>';
+                    return '<div class="hidden">🝴</div>';
                 case field.question_mark:
                     return '<div class="hidden">❓</div>';
             }
