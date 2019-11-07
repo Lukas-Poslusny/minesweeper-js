@@ -78,14 +78,24 @@ export class Minesweeper {
      * @param {number} x
      * @param {number} y
      */
-    //revealSurroundingEmptyTiles(x, y) {
-
-    //  if (this.getAmountOfSurroundingBombs(x, y) == 0) {
-
-    //}
-
-
-    //}
+    revealSurroundingEmptyTiles(x, y) {
+        for (let o = 0; o < 3; o++) {
+            for (let p = 0; p < 3; p++) {
+                let q = x - 1 + o;
+                let w = y - 1 + p;
+               // console.log(this.array[w][q]);
+                if ((q != 3) && (w != 3)) {
+                    try {
+                        this.reveal(q, w);    
+                    } catch (error) {
+                        
+                    }
+                     
+                } 
+                
+            }
+        }
+    }
     /**
      * TODO: IMPLEMENT THIS
      * Returns how many bombs are around the field
@@ -101,7 +111,6 @@ export class Minesweeper {
                     surroundingBombs++;
             }
         }
-        console.log(surroundingBombs);
         return surroundingBombs;
     }
 
@@ -136,11 +145,15 @@ export class Minesweeper {
      */
     reveal(x, y) {
         if (this.isBombOnPosition(x, y)) {
+            
             this.didLost = true;
         }
         if (this.array[y][x] == field.hidden) {
-            // this.revealSurroundingEmptyTiles(y, x);
             this.array[y][x] = field.visible;
+            if (this.getAmountOfSurroundingBombs(y, x) == 0) {
+                this.revealSurroundingEmptyTiles(x, y);
+            }
+            
         }
         if (this.array[y][x] == field.flag) {
             this.array[y][x] = field.flag;
@@ -158,11 +171,11 @@ export class Minesweeper {
      * @param {number} y
      */
     toggleFieldState(x, y) {
-        if (this.array[y][x] == field.hidden){
+        if (this.array[y][x] == field.hidden) {
             this.array[y][x] = field.flag;
-            
+
         }
-            
+
 
         else if (this.array[y][x] == field.flag)
             this.array[y][x] = field.question_mark;
@@ -180,7 +193,7 @@ export class Minesweeper {
      * @returns {boolean}
      */
     didWin() {
-        if (this.getRemainingBombCount == 0)
+        if (this.getRemainingBombCount() == 0)
             return true
         else
             return false;
@@ -195,7 +208,17 @@ export class Minesweeper {
         return this.didLost;
 
     }
-
+    /**
+     * returns true if the bomb has been flagged already
+     * @param x
+     * @param y
+     * @returns {boolean}
+     */
+    isBombFlagged(x, y){
+        if (this.isBombOnPosition(y, x) && (this.array[x][y] == field.flag)) {
+            return true;
+        } else return false
+    }
     /**
      * Returns the remaining amount bombs, user has to select
      * @return {number}
@@ -205,7 +228,7 @@ export class Minesweeper {
         let bmb = bombRemaining;
         for (let a = 0; a < 10; a++) {
             for (let b = 0; b < 10; b++) {
-                if (this.array[b][a] == field.flag) {
+                if (this.isBombFlagged(b, a)) {
                     bmb--;
                 }
             }
