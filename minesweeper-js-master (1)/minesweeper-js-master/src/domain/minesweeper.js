@@ -81,18 +81,15 @@ export class Minesweeper {
     revealSurroundingEmptyTiles(x, y) {
         for (let o = 0; o < 3; o++) {
             for (let p = 0; p < 3; p++) {
-                let q = x - 1 + o;
-                let w = y - 1 + p;
-               // console.log(this.array[w][q]);
-                if ((q != 3) && (w != 3)) {
-                    try {
-                        this.reveal(q, w);    
-                    } catch (error) {
-                        
+                let q = (x - 1) + o;
+                let w = (y - 1) + p;
+                // console.log(this.array[w][q]);
+                if ((q != 1) && (w != 1)) {
+                    if ((((q <= 9) && (q >= 0)) && (w <= 9 && (w >= 0))) && (this.array[q][w] == field.hidden)) {
+                        this.reveal(q, w);
+                        console.log(q + " " + w)
                     }
-                     
-                } 
-                
+                }
             }
         }
     }
@@ -122,7 +119,7 @@ export class Minesweeper {
      * @return {boolean}
      */
     isBombOnPosition(x, y) {
-        // console.log(this.bombField[y][x]);
+        // console.log(this.bombField[x][y]);
         try {
             if ((this.bombField[y][x] == null))
                 return false;
@@ -145,7 +142,7 @@ export class Minesweeper {
      */
     reveal(x, y) {
         if (this.isBombOnPosition(x, y)) {
-            
+
             this.didLost = true;
         }
         if (this.array[y][x] == field.hidden) {
@@ -153,7 +150,7 @@ export class Minesweeper {
             if (this.getAmountOfSurroundingBombs(y, x) == 0) {
                 this.revealSurroundingEmptyTiles(x, y);
             }
-            
+
         }
         if (this.array[y][x] == field.flag) {
             this.array[y][x] = field.flag;
@@ -178,6 +175,7 @@ export class Minesweeper {
 
 
         else if (this.array[y][x] == field.flag)
+            
             this.array[y][x] = field.question_mark;
 
         else if (this.array[y][x] == field.question_mark)
@@ -214,7 +212,7 @@ export class Minesweeper {
      * @param y
      * @returns {boolean}
      */
-    isBombFlagged(x, y){
+    isBombFlagged(x, y) {
         if (this.isBombOnPosition(y, x) && (this.array[x][y] == field.flag)) {
             return true;
         } else return false
