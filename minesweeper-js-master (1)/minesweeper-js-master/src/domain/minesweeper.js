@@ -84,11 +84,14 @@ export class Minesweeper {
                 let q = (x - 1) + o;
                 let w = (y - 1) + p;
                 // console.log(this.array[w][q]);
-                if ((q != 1) && (w != 1)) {
-                    if ((((q <= 9) && (q >= 0)) && (w <= 9 && (w >= 0))) && (this.array[q][w] == field.hidden)) {
-                        this.reveal(q, w);
+                if (this.isOutOfBounds(q, w) == false) {
+                    if ((q != 1) && (w != 1)) {
+                        if (this.array[q][w] == field.hidden) {
+                            this.reveal(q, w);
                         console.log(q + " " + w)
+                        } 
                     }
+
                 }
             }
         }
@@ -104,13 +107,24 @@ export class Minesweeper {
         let surroundingBombs = 0;
         for (let j = 0; j < 3; j++) {
             for (let i = 0; i < 3; i++) {
-                if (this.isBombOnPosition(x - 1 + i, y - 1 + j))
-                    surroundingBombs++;
+                if (this.isOutOfBounds((x - 1) + i, (y - 1) + j) == false) {
+                    if (this.isBombOnPosition((x - 1) + i, (y - 1) + j))
+                        surroundingBombs++;
+                }
             }
         }
         return surroundingBombs;
     }
-
+    /**
+     * checks if the coordinates arent outside the bounds
+     * @param {number} x 
+     * @param {number} y 
+     */
+    isOutOfBounds(x, y){
+        if (((x <= 9) && (x >= 0)) && (y <= 9 && (y >= 0))) {
+            return false;
+        } else return true;
+    }
     /**
      * TODO: IMPLEMENT THIS
      * Returns true there is a bomb on the position
@@ -119,18 +133,14 @@ export class Minesweeper {
      * @return {boolean}
      */
     isBombOnPosition(x, y) {
-        // console.log(this.bombField[x][y]);
-        try {
+        if (this.isOutOfBounds(x, y) == false) {
             if ((this.bombField[y][x] == null))
                 return false;
             else if ((this.bombField[y][x]) == true)
                 return true;
             else
                 return false;
-
-        } catch (error) {
-
-        }
+        } else return false;
     }
 
     /**
@@ -141,22 +151,24 @@ export class Minesweeper {
      * @param {number} y
      */
     reveal(x, y) {
-        if (this.isBombOnPosition(x, y)) {
+        if (this.isOutOfBounds(x, y) == false) {
+            if (this.isBombOnPosition(x, y)) {
 
-            this.didLost = true;
-        }
-        if (this.array[y][x] == field.hidden) {
-            this.array[y][x] = field.visible;
-            if (this.getAmountOfSurroundingBombs(y, x) == 0) {
-                this.revealSurroundingEmptyTiles(x, y);
+                this.didLost = true;
             }
-
-        }
-        if (this.array[y][x] == field.flag) {
-            this.array[y][x] = field.flag;
-        }
-        else if (this.array[y][x] == field.question_mark) {
-            this.array[y][x] = field.question_mark;
+            if (this.array[y][x] == field.hidden) {
+                this.array[y][x] = field.visible;
+                if (this.getAmountOfSurroundingBombs(y, x) == 0) {
+                    this.revealSurroundingEmptyTiles(x, y);
+                }
+    
+            }
+            if (this.array[y][x] == field.flag) {
+                this.array[y][x] = field.flag;
+            }
+            else if (this.array[y][x] == field.question_mark) {
+                this.array[y][x] = field.question_mark;
+            }
         }
 
     }
@@ -175,7 +187,7 @@ export class Minesweeper {
 
 
         else if (this.array[y][x] == field.flag)
-            
+
             this.array[y][x] = field.question_mark;
 
         else if (this.array[y][x] == field.question_mark)
