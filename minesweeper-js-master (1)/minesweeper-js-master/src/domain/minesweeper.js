@@ -79,22 +79,18 @@ export class Minesweeper {
      * @param {number} y
      */
     revealSurroundingEmptyTiles(x, y) {
-        for (let o = 0; o < 3; o++) {
-            for (let p = 0; p < 3; p++) {
-                let q = (x - 1) + o;
-                let w = (y - 1) + p;
-                // console.log(this.array[w][q]);
-                if (this.isOutOfBounds(q, w) == false) {
-                    if ((q != 1) && (w != 1)) {
-                        if (this.array[q][w] == field.hidden) {
-                            this.reveal(q, w);
-                        console.log(q + " " + w)
-                        } 
+        if ((this.getAmountOfSurroundingBombs(y, x) == 0)) {
+            for (let o = 0; o < 3; o++) {
+                for (let p = 0; p < 3; p++) {
+                    let q = x - 1 + p;
+                    let w = y - 1 + o;
+                    if (this.isOutOfBounds(q,w) == false) {
+                        this.reveal(q,w);
                     }
-
                 }
             }
         }
+
     }
     /**
      * TODO: IMPLEMENT THIS
@@ -120,10 +116,12 @@ export class Minesweeper {
      * @param {number} x 
      * @param {number} y 
      */
-    isOutOfBounds(x, y){
+    isOutOfBounds(x, y) {
         if (((x <= 9) && (x >= 0)) && (y <= 9 && (y >= 0))) {
             return false;
-        } else return true;
+        }
+        else
+            return true;
     }
     /**
      * TODO: IMPLEMENT THIS
@@ -158,17 +156,16 @@ export class Minesweeper {
             }
             if (this.array[y][x] == field.hidden) {
                 this.array[y][x] = field.visible;
-                if (this.getAmountOfSurroundingBombs(y, x) == 0) {
-                    this.revealSurroundingEmptyTiles(x, y);
-                }
-    
+                this.revealSurroundingEmptyTiles(x, y);
+
+
             }
             if (this.array[y][x] == field.flag) {
                 this.array[y][x] = field.flag;
             }
             else if (this.array[y][x] == field.question_mark) {
                 this.array[y][x] = field.question_mark;
-            }
+            } else this.array[y][x] == field.visible;
         }
 
     }
